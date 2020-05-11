@@ -54,6 +54,8 @@ public class AppParams {
     }
 
     public static void loadFromFile(String path) {
+        setDefaults();
+
         for (String s : ResourceUtils.loadLinesArray((String)path)) {
             if (s.isEmpty() || s.startsWith("//")) continue;
 

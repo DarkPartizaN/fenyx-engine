@@ -8,6 +8,7 @@ import com.fenyx.utils.StringUtils;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -70,14 +71,17 @@ public class FontManager {
         key_table = getAvaliableChars(font, key_table);
 
         FenyxFont tmp = new FenyxFont();
+        tmp.name = name;
         tmp.setKeyTable(key_table);
 
         Graphics2D g = new BufferedImage(1, 1, 2).createGraphics();
         g.setFont(font);
-        tmp.font_metrics = g.getFontMetrics();
+        FontMetrics font_metrics = g.getFontMetrics();
 
-        float w = (float) tmp.font_metrics.getStringBounds(key_table, g).getWidth();
-        float h = (float) tmp.font_metrics.getHeight();
+        float w = (float) font_metrics.getStringBounds(key_table, g).getWidth();
+        float h = (float) font_metrics.getStringBounds(key_table, g).getHeight();
+        tmp.font_height = (int) h;
+        tmp.ascent = h - font_metrics.getMaxAscent();
 
         WritableRaster raster = Raster.createInterleavedRaster(0, (int) w, (int) h, 4, null);
         BufferedImage source_image = new BufferedImage(AWTImage.alphaColorModel, raster, false, null);
@@ -130,5 +134,10 @@ public class FontManager {
 
     public static int cashedFontNum() {
         return cached_fonts.size();
+    }
+
+    public static int getFontTexture(String name) {
+
+        return 0;
     }
 }

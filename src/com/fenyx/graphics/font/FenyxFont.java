@@ -1,7 +1,5 @@
 package com.fenyx.graphics.font;
 
-import java.awt.FontMetrics;
-
 import com.fenyx.graphics.Texture;
 
 /**
@@ -10,43 +8,51 @@ import com.fenyx.graphics.Texture;
  */
 public class FenyxFont {
 
-    private String key_table;
+    public String name;
     public Texture font_texture;
-    public FontMetrics font_metrics;
+
+    private String key_table;
     float[] char_offset;
     float[] char_width;
-    float font_height;
+    public int font_height;
+    public float ascent;
 
     void setKeyTable(String table) {
-        this.key_table = table;
+        key_table = table;
     }
 
     public String getKeyTable() {
-        return this.key_table;
+        return key_table;
     }
 
     public float getCharX(char c) {
-        int idx = this.key_table.indexOf(c);
-        return this.char_offset[idx];
+        int idx = key_table.indexOf(c);
+        if (idx == -1) return 0;
+
+        return char_offset[idx];
     }
 
     public int getHeight() {
-        return this.font_metrics.getHeight();
+        return font_height;
     }
 
     public float charWidth(int c) {
-        int idx = this.key_table.indexOf(c);
-        return this.char_width[idx];
+        int idx = key_table.indexOf(c);
+        if (idx == -1) return 0;
+
+        return char_width[idx];
     }
 
     public int stringWidth(String s) {
-        if (s == null || s.isEmpty()) {
-            return 0;
-        }
-        return this.font_metrics.stringWidth(s);
+        if (s == null || s.isEmpty()) return 0;
+
+        int w = 0;
+        for (char c : s.toCharArray()) w += charWidth(c);
+
+        return w;
     }
 
     public Texture getFontTexture() {
-        return this.font_texture;
+        return font_texture;
     }
 }
