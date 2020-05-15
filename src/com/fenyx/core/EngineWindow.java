@@ -1,5 +1,6 @@
 package com.fenyx.core;
 
+import com.fenyx.ui.UIManager;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCharCallback;
@@ -49,6 +50,7 @@ final class EngineWindow {
         GLFW.glfwSwapInterval(0);
 
         ScreenConfig.setupScreen(width, height, fullscreen);
+        UIManager.init(width, height);
 
         GLFW.glfwSetWindowPos(window_handle, x, y);
 

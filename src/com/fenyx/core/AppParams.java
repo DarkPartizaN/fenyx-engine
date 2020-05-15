@@ -4,6 +4,7 @@ import com.fenyx.utils.ResourceUtils;
 import com.fenyx.utils.StringUtils;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -11,7 +12,7 @@ import java.util.HashMap;
  */
 public class AppParams {
 
-    private static final HashMap<String, String> params = new HashMap<>();
+    private static final Map<String, String> params = new HashMap<>();
 
     public static void addParam(String name, String value) {
         params.put(name, value);
@@ -21,7 +22,7 @@ public class AppParams {
         params.replace(name, newValue);
     }
 
-    public static HashMap<String, String> getAllParams() {
+    public static Map<String, String> getAllParams() {
         return params;
     }
 
@@ -56,14 +57,14 @@ public class AppParams {
     public static void loadFromFile(String path) {
         setDefaults();
 
-        for (String s : ResourceUtils.loadLinesArray((String)path)) {
+        for (String s : ResourceUtils.loadLinesArray(path)) {
             if (s.isEmpty() || s.startsWith("//")) continue;
 
-            String[] tokens = StringUtils.splitString((String)s, (String)"=");
-            tokens[0] = StringUtils.trim((String)tokens[0]);
-            tokens[0] = StringUtils.replace((String)tokens[0], (String)" ", (String)"");
-            tokens[1] = StringUtils.crop((String)tokens[1], (String)"//");
-            tokens[1] = StringUtils.trim((String)tokens[1]);
+            String[] tokens = StringUtils.splitString(s, "=");
+            tokens[0] = StringUtils.trim(tokens[0]);
+            tokens[0] = StringUtils.replace(tokens[0], " ", "");
+            tokens[1] = StringUtils.crop(tokens[1], "//");
+            tokens[1] = StringUtils.trim(tokens[1]);
 
             AppParams.addParam(tokens[0], tokens[1]);
         }

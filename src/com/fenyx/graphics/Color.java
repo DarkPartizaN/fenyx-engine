@@ -76,7 +76,7 @@ public class Color {
         return new Color(1.0F - this.r, 1.0F - this.g, 1.0F - this.b, 1.0F - this.a);
     }
 
-    public Color invert_no_alpha() {
+    public Color invertPreserveAlpha() {
         return new Color(1.0F - this.r, 1.0F - this.g, 1.0F - this.b, this.a);
     }
 

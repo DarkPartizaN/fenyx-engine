@@ -98,9 +98,7 @@ public class UIManager {
         }
 
         public void removeAll() {
-            uis.forEach((ui) -> {
-                remove(ui);
-            });
+            uis.forEach(UI::onDestroy);
             uis.clear();
         }
 

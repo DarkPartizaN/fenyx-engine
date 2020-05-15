@@ -66,7 +66,7 @@ public abstract class UI {
         if (elements.isEmpty()) return;
         if (!elements.contains(ui)) return;
 
-        this.elements.remove(ui);
+        elements.remove(ui);
 
         if (ui.parent == this) {
             ui.setPosition(ui.x - this.x, ui.y - this.y);
@@ -95,11 +95,10 @@ public abstract class UI {
     }
 
     public final void centerElement() {
-        if (parent == null) {
+        if (parent == null)
             setPosition(UIManager.UI_SCREEN_WIDTH / 2 - width / 2, UIManager.UI_SCREEN_HEIGHT / 2 - height / 2);
-        } else {
+        else
             setPosition(parent.x + parent.width / 2 - width / 2, parent.y + parent.height / 2 - height / 2);
-        }
     }
 
     public final void setX(int x) {

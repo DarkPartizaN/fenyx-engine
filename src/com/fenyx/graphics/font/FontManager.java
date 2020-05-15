@@ -135,9 +135,4 @@ public class FontManager {
     public static int cashedFontNum() {
         return cached_fonts.size();
     }
-
-    public static int getFontTexture(String name) {
-
-        return 0;
-    }
 }
