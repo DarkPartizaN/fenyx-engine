@@ -232,10 +232,8 @@ public abstract class UI {
     }
 
     public boolean canEvent() {
-        if ((hasParent()) && ((!parent.isActive()) || (!parent.isVisible())))
-            return false;
-        if ((!isActive()) || (!isVisible()))
-            return false;
+        if (hasParent() && (!parent.isActive() || !parent.isVisible())) return false;
+        if (!isActive() || !isVisible()) return false;
 
         if (System.currentTimeMillis() - last_event > event_delay) {
             last_event = System.currentTimeMillis();

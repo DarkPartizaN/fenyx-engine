@@ -74,8 +74,7 @@ public class UIManager {
     }
 
     public static void frame() {
-        if (!state)
-            return;
+        if (!state) return;
 
         UILayer tmp;
         //HACKHACK: we don't need sort, cause hash key is number of layer :crazy.gif:
