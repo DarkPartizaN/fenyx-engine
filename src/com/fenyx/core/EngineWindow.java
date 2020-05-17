@@ -91,6 +91,7 @@ final class EngineWindow {
             //Process state
             EngineTimer.tick();
             StateManager.processState();
+            UIManager.frame();
 
             GLFW.glfwSwapBuffers(window_handle);
             GLFW.glfwPollEvents();

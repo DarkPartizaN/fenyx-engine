@@ -2,6 +2,7 @@ package com.fenyx.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.lwjgl.opengl.GL11;
 
 /**
  *
@@ -77,14 +78,19 @@ public class UIManager {
     public static void frame() {
         if (!state) return;
 
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+
         UILayer tmp;
         //HACKHACK: we don't need sort, cause hash key is number of layer :crazy.gif:
         for (int i = 0; i <= last_layer; i++) {
             tmp = layers.get(i);
-            if (tmp != null) {
-                tmp.draw();
-            }
+            if (tmp != null) tmp.draw();
         }
+
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     //Simple class for layer representation

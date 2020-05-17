@@ -265,7 +265,7 @@ public abstract class UI {
     public final void update() {
         if (canIdle()) onIdle();
 
-        focused = Input.mouseInRect(x, y, width, height);
+        focused = Input.mouseInRect(clip_x, clip_y, clip_w, clip_h);
 
         if (canEvent()) {
             if (focused) {
