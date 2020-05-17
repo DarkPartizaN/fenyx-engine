@@ -2,6 +2,7 @@ package com.fenyx.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -11,7 +12,6 @@ import org.lwjgl.opengl.GL11;
 public class UIManager {
 
     public static int UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT;
-    int test;
 
     private static final HashMap<Integer, UILayer> layers = new HashMap<>();
     private static boolean state = false;
@@ -91,6 +91,7 @@ public class UIManager {
 
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
+        GL11.glScissor(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT);
     }
 
     //Simple class for layer representation
@@ -112,6 +113,10 @@ public class UIManager {
             uis.forEach((ui) -> {
                 if (ui != null) {
                     ui.update();
+
+                    int tmp_y = (int)(UI_SCREEN_HEIGHT - ui.clip_y - ui.clip_h); 
+                    GL11.glScissor(ui.clip_x, tmp_y, ui.clip_w, ui.clip_h);
+
                     if (ui.isVisible())
                         ui.onDraw();
                 }

@@ -118,10 +118,10 @@ public class FontManager {
         }
 
         byte[] data = ((DataBufferByte) source_image.getRaster().getDataBuffer()).getData();
+
         ByteBuffer imageData = BufferUtils.createByteBuffer(data.length);
-        imageData.put(data, 0, data.length);
-        imageData.flip();
-        tmp.font_texture = TextureManager.createTexture(name, (int) w, (int) h, TextureFormat.getDefaultAlpha(), imageData);
+        imageData.put(data, 0, data.length).flip();
+        tmp.font_texture = TextureManager.createTexture(name, (int) w, (int) h, TextureFormat.getDefaultAlphaNearest(), imageData);
 
         FontManager.cached_fonts.put(name, tmp);
 

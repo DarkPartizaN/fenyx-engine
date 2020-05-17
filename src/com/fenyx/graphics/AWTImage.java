@@ -54,8 +54,7 @@ public class AWTImage {
 
         ByteBuffer imageData = BufferUtils.createByteBuffer(data.length);
         imageData.order(ByteOrder.nativeOrder());
-        imageData.put(data, 0, data.length);
-        imageData.flip();
+        imageData.put(data, 0, data.length).flip();
 
         this.raw = imageData;
     }

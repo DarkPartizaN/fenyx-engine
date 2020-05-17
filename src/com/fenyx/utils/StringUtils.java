@@ -11,9 +11,8 @@ public class StringUtils {
     private static final StringBuilder sb = new StringBuilder(64);
 
     public static String replace(String s, String pattern, String replace) {
-        while (s.contains(pattern)) {
+        while (s.contains(pattern))
             s = s.replace(pattern, replace);
-        }
 
         return s;
     }

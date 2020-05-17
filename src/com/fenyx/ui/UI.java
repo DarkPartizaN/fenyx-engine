@@ -1,6 +1,7 @@
 package com.fenyx.ui;
 
 import com.fenyx.core.Input;
+import com.fenyx.utils.StringUtils;
 import java.util.ArrayList;
 
 /**
@@ -58,6 +59,7 @@ public abstract class UI {
 
         ui.parent = this;
         ui.setPosition(this.x + ui.x, this.y + ui.y);
+        ui.checkClipBounds();
 
         elements.add(ui);
     }
@@ -265,6 +267,7 @@ public abstract class UI {
     public final void update() {
         if (canIdle()) onIdle();
 
+        checkClipBounds();
         focused = Input.mouseInRect(clip_x, clip_y, clip_w, clip_h);
 
         if (canEvent()) {
