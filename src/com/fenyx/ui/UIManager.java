@@ -10,6 +10,7 @@ import java.util.HashMap;
 public class UIManager {
 
     public static int UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT;
+    int test;
 
     private static final HashMap<Integer, UILayer> layers = new HashMap<>();
     private static boolean state = false;
