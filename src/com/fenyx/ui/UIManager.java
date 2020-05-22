@@ -41,15 +41,13 @@ public class UIManager {
         if (last_layer < layer)
             last_layer = layer; //HACKHACK: now, it 'OutOfBounds'-proof :)
 
-        layers.get(layer).uis.add(ui);
+        layers.get(layer).add(ui);
     }
 
     public static void remove(UI ui) {
         for (UILayer layer : layers.values()) {
-            if (layer.uis.contains(ui)) {
                 layer.remove(ui);
                 break; //NOTE: we search for first match, cause there's no doublers of UI object in normal case though
-            }
         }
     }
 
@@ -99,9 +97,15 @@ public class UIManager {
 
         private final ArrayList<UI> uis = new ArrayList<>();
 
+        public void add(UI ui) {
+            if (!uis.contains(ui)) uis.add(ui);
+        }
+
         public void remove(UI ui) {
-            ui.onDestroy();
-            uis.remove(ui);
+            if (uis.contains(ui)) {
+                ui.onDestroy();
+                uis.remove(ui);
+            }
         }
 
         public void removeAll() {
@@ -114,7 +118,7 @@ public class UIManager {
                 if (ui != null) {
                     ui.update();
 
-                    int tmp_y = (int)(UI_SCREEN_HEIGHT - ui.clip_y - ui.clip_h); 
+                    int tmp_y = (int) (UI_SCREEN_HEIGHT - ui.clip_y - ui.clip_h);
                     GL11.glScissor(ui.clip_x, tmp_y, ui.clip_w, ui.clip_h);
 
                     if (ui.isVisible())
