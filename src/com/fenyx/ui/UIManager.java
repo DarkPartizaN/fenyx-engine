@@ -1,5 +1,7 @@
 package com.fenyx.ui;
 
+import com.fenyx.graphics.Color;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 public class UIManager {
 
     public static int UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT;
+    public static boolean UI_DRAW_BOUNDS = true;
 
     private static final HashMap<Integer, UILayer> layers = new HashMap<>();
     private static boolean state = false;
@@ -46,8 +49,8 @@ public class UIManager {
 
     public static void remove(UI ui) {
         for (UILayer layer : layers.values()) {
-                layer.remove(ui);
-                break; //NOTE: we search for first match, cause there's no doublers of UI object in normal case though
+            layer.remove(ui);
+            break; //NOTE: we search for first match, cause there's no doublers of UI object in normal case though
         }
     }
 
@@ -114,13 +117,26 @@ public class UIManager {
         }
 
         public void draw() {
-            uis.forEach((ui) -> {
+            uis.forEach((UI ui) -> {
                 if (ui != null) {
                     ui.update();
-
+                    
                     int tmp_y = (int) (UI_SCREEN_HEIGHT - ui.clip_y - ui.clip_h);
-                    GL11.glScissor(ui.clip_x, tmp_y, ui.clip_w, ui.clip_h);
-
+                    GL11.glScissor(ui.clip_x - 1, tmp_y - 1, ui.clip_w + 2, ui.clip_h + 2);
+                    
+                    if (UI_DRAW_BOUNDS) {
+                        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+                        GL11.glColor4f(Color.red.r, Color.red.g, Color.red.b, Color.red.a);
+                        GL11.glBegin(GL11.GL_LINE_LOOP);
+                        {
+                            GL11.glVertex2f(ui.clip_x, ui.clip_y);
+                            GL11.glVertex2f(ui.clip_x + ui.clip_w, ui.clip_y);
+                            GL11.glVertex2f(ui.clip_x + ui.clip_w, ui.clip_y + ui.clip_h);
+                            GL11.glVertex2f(ui.clip_x - 1f, ui.clip_y + ui.clip_h);
+                        }
+                        GL11.glEnd();
+                    }
+                    
                     if (ui.isVisible())
                         ui.onDraw();
                 }

@@ -6,7 +6,7 @@ import com.fenyx.ui.UI;
  *
  * @author DarkPartizaN
  */
-public class UIItem extends UI {
+public class UIComponent extends UI {
 
     public UIBackground background;
 

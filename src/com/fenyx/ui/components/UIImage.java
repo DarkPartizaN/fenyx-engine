@@ -8,7 +8,7 @@ import com.fenyx.graphics.TextureManager;
  *
  * @author DarkPartizaN
  */
-public class UIImage extends UIItem {
+public class UIImage extends UIComponent {
 
     private Texture texture;
 

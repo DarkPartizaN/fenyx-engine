@@ -9,8 +9,9 @@ import com.fenyx.graphics.Color;
 public class UIBackground {
 
     protected Color color;
-    protected Color hightlightColor;
-
     protected UIImage image;
-    protected UIImage highlightImage;
+
+    public void onDraw() {
+        
+    }
 }

@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
  *
  * @author DarkPartizaN
  */
-public class UIText extends UIItem {
+public class UIText extends UIComponent {
 
     protected FenyxFont font;
     protected String text;
@@ -18,19 +18,19 @@ public class UIText extends UIItem {
 
     public UIText() {
         setFont(FontManager.getDefault());
-        setSize(0, font.getHeight());
+        setSize(0, (int) (this.font.getHeight() - font.ascent));
         this.text = "";
     }
 
     public UIText(String text) {
         this();
         this.text = text;
-        setSize(this.font.stringWidth(text), this.font.getHeight());
+        setSize(this.font.stringWidth(text), (int) (this.font.getHeight() - font.ascent));
     }
 
     public void setText(String text) {
         this.text = text;
-        setSize(this.font.stringWidth(text), this.font.getHeight());
+        setSize(this.font.stringWidth(text), (int) (this.font.getHeight() - font.ascent));
     }
 
     public String getText() {
@@ -49,8 +49,7 @@ public class UIText extends UIItem {
             Integer.valueOf(text);
 
             return true;
-        }
-        catch (NumberFormatException numberFormatException) {
+        } catch (NumberFormatException numberFormatException) {
             return false;
         }
     }
@@ -76,43 +75,41 @@ public class UIText extends UIItem {
         if (text == null) return;
         if (text.length() <= 0) return;
 
-        float tmp_x, tmp_y;
+        float tmp_x = x - 1;
+        float tmp_y = y - font.ascent;
 
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, font.getFontTexture().id);
         GL11.glColor4f(color.r, color.g, color.b, color.a);
 
         GL11.glBegin(GL11.GL_QUADS);
+        {
+            for (char c : text.toCharArray()) {
+                float w = font.charWidth(c);
+                float h = font.getHeight();
 
-        tmp_x = x;
-        tmp_y = y - font.ascent;
+                float u = 1.0F / font.getFontTexture().width * font.getCharX(c);
+                float v = 0f;
+                float u2 = u + 1.0F / font.getFontTexture().width * w;
+                float v2 = 1f;
 
-        for (char c : text.toCharArray()) {
-            float w = font.charWidth(c);
-            float h = font.getHeight();
+                GL11.glTexCoord2f(u, v);
+                GL11.glVertex2f(tmp_x, tmp_y);
 
-            if (c == '\n') y += h;
+                GL11.glTexCoord2f(u2, v);
+                GL11.glVertex2f(tmp_x + w, tmp_y);
 
-            float u = 1.0F / font.getFontTexture().width * font.getCharX(c);
-            float v = 0f;
-            float u2 = u + 1.0F / font.getFontTexture().width * w;
-            float v2 = 1f;
+                GL11.glTexCoord2f(u2, v2);
+                GL11.glVertex2f(tmp_x + w, tmp_y + h);
 
-            GL11.glTexCoord2f(u, v);
-            GL11.glVertex2f(tmp_x, tmp_y);
+                GL11.glTexCoord2f(u, v2);
+                GL11.glVertex2f(tmp_x, tmp_y + h);
 
-            GL11.glTexCoord2f(u2, v);
-            GL11.glVertex2f(tmp_x + w, tmp_y);
-
-            GL11.glTexCoord2f(u2, v2);
-            GL11.glVertex2f(tmp_x + w, tmp_y + h);
-
-            GL11.glTexCoord2f(u, v2);
-            GL11.glVertex2f(tmp_x, tmp_y + h);
-
-            tmp_x += w;
+                tmp_x += w;
+            }
         }
-
         GL11.glEnd();
+
+        GL11.glColor4f(1f, 1f, 1f, 1f);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
     }
 }
