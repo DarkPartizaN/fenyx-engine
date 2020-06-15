@@ -5,7 +5,7 @@ package com.fenyx.core;
  * @author DarkPartizaN
  */
 public abstract class AppState {
-    
+
     public AppState prevState, nextState;
     public boolean active = false, finished = false;
     public int id;

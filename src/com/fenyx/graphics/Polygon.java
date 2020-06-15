@@ -9,7 +9,7 @@ import org.joml.Vector3f;
 public class Polygon {
 
     public Vertex[] vertices;
-    public int texId;
+    public Texture tex;
 
     public Polygon() {
         vertices = new Vertex[3];

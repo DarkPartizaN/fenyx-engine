@@ -64,7 +64,6 @@ final class EngineWindow {
         double[] mouse_x = new double[1];
         double[] mouse_y = new double[1];
 
-        GL11.glOrtho(0.0f, ScreenConfig.screen_width, ScreenConfig.screen_height, 0.0f, 0.0f, 1.0f);
         GL11.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
@@ -87,10 +86,13 @@ final class EngineWindow {
             Input.updateMousePos((int) mouse_x[0], (int) mouse_y[0]);
 
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+            GL11.glScissor(0, 0, ScreenConfig.screen_width, ScreenConfig.screen_height);
 
             //Process state
             EngineTimer.tick();
             StateManager.processState();
+
+            GL11.glOrtho(0.0f, ScreenConfig.screen_width, ScreenConfig.screen_height, 0.0f, 0.0f, 1.0f);
             UIManager.frame();
 
             GLFW.glfwSwapBuffers(window_handle);

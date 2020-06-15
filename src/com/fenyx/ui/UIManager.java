@@ -88,7 +88,6 @@ public class UIManager {
 
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
-        GL11.glScissor(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT);
     }
 
     //Simple class for layer representation

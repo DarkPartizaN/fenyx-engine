@@ -71,7 +71,7 @@ public class StringUtils {
 
     public static final String crop(String src, String pattern) {
         int pos = src.lastIndexOf(pattern);
-        return (pos <= 0) ? src : src.substring(0, pos - 1);
+        return (pos <= 0) ? src : src.substring(0, pos);
     }
 
     public static final String trim(String string) {
