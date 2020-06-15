@@ -55,12 +55,14 @@ public class TextureManager {
 
     private static void copyTextureParams(Texture t) {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, t.id);
+
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, t.textureFormat.wrapping);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, t.textureFormat.wrapping);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, t.textureFormat.minFilter);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, t.textureFormat.magFilter);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL14.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
         GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, t.textureFormat.internalFormat, t.width, t.height, 0, t.textureFormat.format, GL11.GL_UNSIGNED_BYTE, (ByteBuffer) t.raw);
+
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
     }
 }

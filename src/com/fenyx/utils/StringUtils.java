@@ -10,28 +10,11 @@ public class StringUtils {
 
     private static final StringBuilder sb = new StringBuilder(64);
 
-    public static String replace(String s, String pattern, String replace) {
-        while (s.contains(pattern))
-            s = s.replace(pattern, replace);
+    public static String replace(String s, String from, String to) {
+        while (s.contains(from))
+            s = s.replace(from, to);
 
         return s;
-    }
-
-    public static String[] splitString(String str, String separator) {
-        ArrayList<String> strings = new ArrayList<>();
-
-        int start = 0;
-        int skip = separator.length();
-
-        str = concat(new String[]{str, separator});
-
-        while (start < str.length()) {
-            int end = str.indexOf(separator, start);
-            strings.add(str.substring(start, end));
-            start = end + skip;
-        }
-
-        return (String[]) strings.toArray(new String[strings.size()]);
     }
 
     public static String concat(String... strings) {
@@ -50,6 +33,23 @@ public class StringUtils {
         return sb.toString();
     }
 
+    public static String[] splitString(String str, String separator) {
+        ArrayList<String> strings = new ArrayList<>();
+
+        int start = 0;
+        int skip = separator.length();
+
+        str = concat(str, separator);
+
+        while (start < str.length()) {
+            int end = str.indexOf(separator, start);
+            strings.add(str.substring(start, end));
+            start = end + skip;
+        }
+
+        return (String[]) strings.toArray(new String[strings.size()]);
+    }
+
     public static final String arrayToString(String[] strings) {
         sb.delete(0, sb.length());
 
@@ -58,12 +58,12 @@ public class StringUtils {
         return sb.toString();
     }
 
-    public static final String arrayToString(String[] strings, String splitter) {
+    public static final String arrayToString(String[] strings, String separator) {
         sb.delete(0, sb.length());
 
         for (String s : strings) {
             sb.append(s);
-            sb.append(splitter);
+            sb.append(separator);
         }
 
         return sb.toString();

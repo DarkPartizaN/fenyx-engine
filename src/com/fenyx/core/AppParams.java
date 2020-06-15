@@ -72,7 +72,7 @@ public class AppParams {
 
     public static void setDefaults() {
         AppParams.addParam("com.fenyx.AppName", "Default Fenyx App");
-        AppParams.addParam("com.fenyx.Width", "800");
+        AppParams.addParam("com.fenyx.Width", "1024");
         AppParams.addParam("com.fenyx.Height", "600");
         AppParams.addParam("com.fenyx.Fullscreen", "false");
     }

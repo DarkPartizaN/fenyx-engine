@@ -16,7 +16,7 @@ public class UIManager {
     public static int UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT;
     public static boolean UI_DRAW_BOUNDS = true;
 
-    private static final HashMap<Integer, UILayer> layers = new HashMap<>();
+    private static final HashMap<String, UILayer> layers = new HashMap<>();
     private static boolean state = false;
     private static int last_layer = 0; //Protection from 'genius' people, who decide to add a crap bunch of random layer numbers
 
@@ -26,7 +26,7 @@ public class UIManager {
         UI_SCREEN_HEIGHT = height;
 
         //Create default layer
-        layers.put(0, new UILayer());
+        layers.put("uiLayerDefault", new UILayer());
     }
 
     //!And this before your main loop started
@@ -35,16 +35,14 @@ public class UIManager {
     }
 
     public static void add(UI ui) {
-        add(ui, 0);
+        add(ui, "uiLayerDefault");
     }
 
-    public static void add(UI ui, int layer) {
-        if (layers.get(layer) == null)
-            layers.put(layer, new UILayer());
-        if (last_layer < layer)
-            last_layer = layer; //HACKHACK: now, it 'OutOfBounds'-proof :)
+    public static void add(UI ui, String layerName) {
+        if (layers.get(layerName) == null)
+            layers.put(layerName, new UILayer());
 
-        layers.get(layer).add(ui);
+        layers.get(layerName).add(ui);
     }
 
     public static void remove(UI ui) {
@@ -54,12 +52,12 @@ public class UIManager {
         }
     }
 
-    public static void remove(UI ui, int layer) {
+    public static void remove(UI ui, String layer) {
         //NOTE: use UI.setVisible(boolean) method instead, if you wanna to re-use this UI object lately
         layers.get(layer).remove(ui);
     }
 
-    public static void removeAllUI(int layer) {
+    public static void removeAllUI(String layer) {
         //NOTE: use UI.setVisible(boolean) method instead, if you wanna to re-use this UI object lately
         layers.get(layer).removeAll();
     }
@@ -72,7 +70,7 @@ public class UIManager {
         layers.clear();
     }
 
-    public static void clearLayer(int layer) {
+    public static void clearLayer(String layer) {
         layers.get(layer).uis.clear(); //Not destroying UIs, safe for re-use them, just clear layer from UI objects
     }
 
@@ -83,12 +81,10 @@ public class UIManager {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-        UILayer tmp;
         //HACKHACK: we don't need sort, cause hash key is number of layer :crazy.gif:
-        for (int i = 0; i <= last_layer; i++) {
-            tmp = layers.get(i);
-            if (tmp != null) tmp.draw();
-        }
+        layers.values().stream().filter((tmp) -> (tmp != null)).forEachOrdered((tmp) -> {
+            tmp.draw();
+        });
 
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
