@@ -1,6 +1,14 @@
 package com.fenyx.core;
 
 import com.fenyx.ui.UIManager;
+import com.fenyx.utils.ResourceUtils;
+import com.fenyx.utils.StringUtils;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.lwjgl.BufferUtils;
+
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCharCallback;
@@ -18,7 +26,7 @@ final class EngineWindow {
 
     private long window_handle;
     private boolean show_system_cursor = true;
-    boolean isNeedClose = false;
+    boolean isNeedClose = false, isNeedScreenshot = false;
 
     //FPS
     private int fps;
@@ -47,7 +55,7 @@ final class EngineWindow {
         GLFW.glfwSetMouseButtonCallback(window_handle, new MouseButtonsCallback());
 
         GLFW.glfwMakeContextCurrent(window_handle);
-        GLFW.glfwSwapInterval(0);
+        GLFW.glfwSwapInterval(1);
 
         ScreenConfig.setupScreen(width, height, fullscreen);
         UIManager.init(width, height);
@@ -66,6 +74,8 @@ final class EngineWindow {
 
         GL11.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
 
         //LOOP
         while (!GLFW.glfwWindowShouldClose(window_handle)) {
@@ -85,18 +95,32 @@ final class EngineWindow {
             GLFW.glfwGetCursorPos((long) this.window_handle, (double[]) mouse_x, (double[]) mouse_y);
             Input.updateMousePos((int) mouse_x[0], (int) mouse_y[0]);
 
-            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+            GL11.glMatrixMode(GL11.GL_PROJECTION);
+            GL11.glLoadIdentity();
+            GL11.glMatrixMode(GL11.GL_MODELVIEW);
+            GL11.glLoadIdentity();
+
             GL11.glScissor(0, 0, ScreenConfig.screen_width, ScreenConfig.screen_height);
+            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+            GL11.glColor4f(1f, 1f, 1f, 1f);
 
             //Process state
             EngineTimer.tick();
             StateManager.processState();
 
+            //UI
+            GL11.glMatrixMode(GL11.GL_PROJECTION);
+            GL11.glLoadIdentity();
+            GL11.glMatrixMode(GL11.GL_MODELVIEW);
+            GL11.glLoadIdentity();
             GL11.glOrtho(0.0f, ScreenConfig.screen_width, ScreenConfig.screen_height, 0.0f, 0.0f, 1.0f);
+
             UIManager.frame();
 
             GLFW.glfwSwapBuffers(window_handle);
             GLFW.glfwPollEvents();
+
+            if (isNeedScreenshot) screenshot();
 
             if (currentFrametime - fpsUpdate >= 1000L) {
                 fpsUpdate = currentFrametime;
@@ -112,11 +136,15 @@ final class EngineWindow {
             EngineTimer.fps = fps;
         }
 
+        //OpenGL stuff here
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_BLEND);
+
         StateManager.getCurrentState().onStop();
         StateManager.getCurrentState().finished = true;
         StateManager.setState(StateManager.STATE_NULL);
 
-        Callbacks.glfwFreeCallbacks((long)this.window_handle);
+        Callbacks.glfwFreeCallbacks((long) this.window_handle);
         GLFW.glfwDestroyWindow(window_handle);
 
         GLFW.glfwTerminate();
@@ -163,6 +191,8 @@ final class EngineWindow {
             if (key == 256 && action == 0) {
                 GLFW.glfwSetWindowShouldClose((long) window, (boolean) true);
             }
+            if (key == GLFW.GLFW_KEY_F5) isNeedScreenshot = true;
+
             if (action == 1) {
                 char c = EngineWindow.this.charFromKeyCode(key);
                 if (c != '\u0000') {
@@ -170,9 +200,28 @@ final class EngineWindow {
                 }
                 Input.pressKey(key);
             }
+
             if (action == 0) {
                 Input.resetKey(key);
             }
         }
+    }
+
+    private void screenshot() {
+        GL11.glReadBuffer(GL11.GL_FRONT);
+
+        int width = ScreenConfig.screen_width;
+        int height = ScreenConfig.screen_height;
+        int bpp = 4; // Assuming a 32-bit display with a byte each for red, green, blue, and alpha.
+        ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * bpp).order(ByteOrder.nativeOrder());
+
+        GL11.glReadPixels(0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy_HHmmss");
+
+        ResourceUtils.writePNG(StringUtils.concat(ResourceUtils.DIR_ROOT, "screenshots/", formatter.format(date), ".png"), buffer, width, height);
+
+        isNeedScreenshot = false;
     }
 }

@@ -81,16 +81,18 @@ public class UIText extends UIComponent {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, font.getFontTexture().id);
         GL11.glColor4f(color.r, color.g, color.b, color.a);
 
+        float fw = 1.0f / font.getFontTexture().width;
+        float u, v = 0f;
+        float u2, v2 = 1f;
+
         GL11.glBegin(GL11.GL_QUADS);
         {
             for (char c : text.toCharArray()) {
                 float w = font.charWidth(c);
                 float h = font.getHeight();
 
-                float u = 1.0F / font.getFontTexture().width * font.getCharX(c);
-                float v = 0f;
-                float u2 = u + 1.0F / font.getFontTexture().width * w;
-                float v2 = 1f;
+                u = fw * font.getCharX(c);
+                u2 = u + fw * w;
 
                 GL11.glTexCoord2f(u, v);
                 GL11.glVertex2f(tmp_x, tmp_y);

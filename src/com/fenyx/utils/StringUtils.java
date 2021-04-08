@@ -47,7 +47,7 @@ public class StringUtils {
             start = end + skip;
         }
 
-        return (String[]) strings.toArray(new String[strings.size()]);
+        return strings.toArray(new String[strings.size()]);
     }
 
     public static final String arrayToString(String[] strings) {
@@ -72,6 +72,11 @@ public class StringUtils {
     public static final String crop(String src, String pattern) {
         int pos = src.lastIndexOf(pattern);
         return (pos <= 0) ? src : src.substring(0, pos);
+    }
+
+    public static final String cropInvert(String src, String pattern) {
+        int pos = src.lastIndexOf(pattern);
+        return (pos <= 0) ? src : src.substring(pos + 1, src.length());
     }
 
     public static final String trim(String string) {

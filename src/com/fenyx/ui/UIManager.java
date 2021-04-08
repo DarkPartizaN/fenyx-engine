@@ -14,11 +14,11 @@ import org.lwjgl.opengl.GL11;
 public class UIManager {
 
     public static int UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT;
-    public static boolean UI_DRAW_BOUNDS = true;
+    public static boolean UI_DRAW_BOUNDS = false;
 
     private static final HashMap<String, UILayer> layers = new HashMap<>();
     private static boolean state = false;
-    private static int last_layer = 0; //Protection from 'genius' people, who decide to add a crap bunch of random layer numbers
+    //private static int last_layer = 0; //Protection from 'genius' people, who decide to add a crap bunch of random layer numbers
 
     //!CALL IT AT FIRST TO CORRECT INITIALIZE UI!
     public static void init(int width, int height) {
@@ -77,17 +77,12 @@ public class UIManager {
     public static void frame() {
         if (!state) return;
 
-        GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
 
         //HACKHACK: we don't need sort, cause hash key is number of layer :crazy.gif:
         layers.values().stream().filter((tmp) -> (tmp != null)).forEachOrdered((tmp) -> {
             tmp.draw();
         });
-
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glDisable(GL11.GL_BLEND);
     }
 
     //Simple class for layer representation
@@ -118,7 +113,9 @@ public class UIManager {
                     
                     int tmp_y = (int) (UI_SCREEN_HEIGHT - ui.clip_y - ui.clip_h);
                     GL11.glScissor(ui.clip_x - 1, tmp_y - 1, ui.clip_w + 2, ui.clip_h + 2);
-                    
+
+                    if (ui.isVisible()) ui.onDraw();
+
                     if (UI_DRAW_BOUNDS) {
                         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
                         GL11.glColor4f(Color.red.r, Color.red.g, Color.red.b, Color.red.a);
@@ -131,9 +128,6 @@ public class UIManager {
                         }
                         GL11.glEnd();
                     }
-                    
-                    if (ui.isVisible())
-                        ui.onDraw();
                 }
             });
         }

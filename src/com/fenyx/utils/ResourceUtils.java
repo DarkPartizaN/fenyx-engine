@@ -17,8 +17,10 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -100,7 +102,22 @@ public final class ResourceUtils {
             } catch (IOException localIOException) {
             }
         }
+
         return file;
+    }
+
+    public static void writeRaw(String path, byte[] bytes) {
+        OutputStream os;
+
+        if (use_root) path = DIR_ROOT.concat(path);
+
+        try {
+            os = new FileOutputStream(path);
+
+            os.write(bytes);
+            os.close();
+        } catch (IOException e) {
+        }
     }
 
     public static byte[] loadRaw(String path) {

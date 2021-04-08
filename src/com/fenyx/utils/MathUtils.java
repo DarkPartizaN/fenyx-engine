@@ -94,7 +94,7 @@ public class MathUtils {
         return r;
     }
 
-    static int pow(int a, int n) {
+    public static int pow(int a, int n) {
         if (n == 0) return 1;
         if (n % 2 == 1) return pow(a, n - 1) * a;
         int b = pow(a, n / 2);
@@ -102,7 +102,7 @@ public class MathUtils {
         return b * b;
     }
 
-    static float pow(float a, float n) {
+    public static float pow(float a, float n) {
         if (n == 0.0F) return 1.0F;
         if (n % 2.0F == 1.0F) return pow(a, n - 1.0F) * a;
         float b = pow(a, n / 2.0F);
@@ -110,11 +110,15 @@ public class MathUtils {
         return b * b;
     }
 
-    static long pow(long a, long n) {
+    public static long pow(long a, long n) {
         if (n == 0L) return 1L;
         if (n % 2L == 1L) return pow(a, n - 1L) * a;
         long b = pow(a, n / 2L);
 
         return b * b;
+    }
+
+    public static float deg(float radians) {
+        return (float) Math.toDegrees(radians);
     }
 }

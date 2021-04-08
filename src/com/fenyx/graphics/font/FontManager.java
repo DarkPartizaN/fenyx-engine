@@ -121,7 +121,7 @@ public class FontManager {
 
         ByteBuffer imageData = BufferUtils.createByteBuffer(data.length);
         imageData.put(data, 0, data.length).flip();
-        tmp.font_texture = TextureManager.createTexture(name, (int) w, (int) h, TextureFormat.getDefaultAlphaNearest(), imageData);
+        tmp.font_texture = TextureManager.createTexture(name, (int) w, (int) h, TextureFormat.getDefaultAlpha(), imageData);
 
         FontManager.cached_fonts.put(name, tmp);
 

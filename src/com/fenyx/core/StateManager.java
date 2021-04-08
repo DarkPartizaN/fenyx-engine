@@ -20,18 +20,32 @@ public class StateManager {
     }
 
     public static void setState(int id) {
+        if (currentState != null) currentState.setActive(false);
+        if (id == STATE_NULL) {
+            currentState = null;
+            return;
+        }
+
         AppState state = states.get(id);
         currentState = state;
+        currentState.setActive(true);
     }
 
     public static void pushState(int id) {
+        if (currentState != null) currentState.setActive(false);
+
         AppState state = states.get(id);
         state.prevState = currentState;
         currentState = state;
+        currentState.setActive(true);
     }
 
     public static void popState() {
-        currentState = currentState.getPrevState();
+        if (currentState.getPrevState() != null) {
+            currentState.setActive(false);
+            currentState = currentState.getPrevState();
+            currentState.setActive(true);
+        }
     }
 
     public static AppState getState(int id) {
@@ -45,14 +59,18 @@ public class StateManager {
     public static void processState() {
         if (currentState == null) return;
 
-        currentState.process();
+        if (currentState.isActive()) {
+            currentState.handleEvents();
+            currentState.process();
+            currentState.handlePostEvents();
 
-        if (currentState.finished) {
-            currentState.onStop();
+            if (currentState.finished) {
+                currentState.onStop();
 
-            if (currentState.getNextState() != null) {
-                StateManager.pushState(currentState.getNextState().id);
-                currentState.setActive(true);
+                if (currentState.getNextState() != null) {
+                    StateManager.pushState(currentState.getNextState().id);
+                    currentState.setActive(true);
+                }
             }
         }
     }

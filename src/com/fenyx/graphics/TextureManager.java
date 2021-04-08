@@ -15,10 +15,10 @@ import org.lwjgl.opengl.GL14;
 public class TextureManager {
 
     private static final HashMap<String, Texture> cached_textures = new HashMap<>();
-    private static final Texture null_texture = createTexture(ResourceUtils.NULL_IMAGE);
+    public static final Texture null_texture = createTexture(ResourceUtils.NULL_IMAGE);
 
     public static Texture createTexture(String name, int width, int height, TextureFormat format, ByteBuffer raw) {
-        if (!TextureManager.cached_textures.containsKey(name)) {
+        if (!TextureManager.isTextureExist(name)) {
             Texture tmp = new Texture();
             tmp.width = width;
             tmp.height = height;
@@ -42,10 +42,14 @@ public class TextureManager {
     }
 
     public static Texture getTexture(String name) {
-        if (TextureManager.cached_textures.containsKey(name))
+        if (TextureManager.isTextureExist(name))
             return TextureManager.cached_textures.get(name);
 
         return null_texture;
+    }
+
+    public static boolean isTextureExist(String name) {
+        return TextureManager.cached_textures.containsKey(name);
     }
 
     public static void compileTexture(Texture t) {

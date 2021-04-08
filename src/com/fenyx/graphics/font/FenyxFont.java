@@ -9,7 +9,7 @@ import com.fenyx.graphics.Texture;
 public class FenyxFont {
 
     public String name;
-    public Texture font_texture;
+    Texture font_texture;
 
     private String key_table;
     float[] char_offset;
