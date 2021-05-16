@@ -16,7 +16,8 @@ public class UIManager {
     public static int UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT;
     public static boolean UI_DRAW_BOUNDS = false;
 
-    private static final HashMap<String, UILayer> layers = new HashMap<>();
+    private static final HashMap<Integer, UILayer> layers = new HashMap<>();
+    private static final int UI_DEFAULT_LAYER =1;
     private static boolean state = false;
     //private static int last_layer = 0; //Protection from 'genius' people, who decide to add a crap bunch of random layer numbers
 
@@ -26,7 +27,7 @@ public class UIManager {
         UI_SCREEN_HEIGHT = height;
 
         //Create default layer
-        layers.put("uiLayerDefault", new UILayer());
+        layers.put(1, new UILayer());
     }
 
     //!And this before your main loop started
@@ -35,18 +36,25 @@ public class UIManager {
     }
 
     public static void add(UI ui) {
-        add(ui, "uiLayerDefault");
+        add(ui, UI_DEFAULT_LAYER);
     }
 
-    public static void add(UI ui, String layerName) {
-        if (layers.get(layerName) == null)
-            layers.put(layerName, new UILayer());
+    public static void add(UI ui, int layer) {
+        if (layers.get(layer) == null)
+            layers.put(layer, new UILayer());
 
-        layers.get(layerName).add(ui);
+        layers.get(layer).add(ui);
+
+        ui.getElements().forEach((ui2) -> {
+            layers.get(layer).add(ui2);
+        });
     }
 
     public static void remove(UI ui) {
         for (UILayer layer : layers.values()) {
+            ui.getElements().forEach((ui2) -> {
+                layer.remove(ui2);
+            });
             layer.remove(ui);
             break; //NOTE: we search for first match, cause there's no doublers of UI object in normal case though
         }
@@ -54,6 +62,9 @@ public class UIManager {
 
     public static void remove(UI ui, String layer) {
         //NOTE: use UI.setVisible(boolean) method instead, if you wanna to re-use this UI object lately
+        ui.getElements().forEach((ui2) -> {
+            layers.get(layer).remove(ui2);
+        });
         layers.get(layer).remove(ui);
     }
 
@@ -110,7 +121,7 @@ public class UIManager {
             uis.forEach((UI ui) -> {
                 if (ui != null) {
                     ui.update();
-                    
+
                     int tmp_y = (int) (UI_SCREEN_HEIGHT - ui.clip_y - ui.clip_h);
                     GL11.glScissor(ui.clip_x - 1, tmp_y - 1, ui.clip_w + 2, ui.clip_h + 2);
 

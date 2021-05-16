@@ -12,12 +12,11 @@ import org.lwjgl.opengl.GL11;
  */
 public class UIText extends UIComponent {
 
-    protected FenyxFont font;
+    protected FenyxFont font= FontManager.getDefault(); //We need a valid font here;
     protected String text;
-    public Color color = Color.white.get();
+    public Color color = Color.white.get(); //We need a valid color
 
     public UIText() {
-        setFont(FontManager.getDefault());
         setSize(0, (int) (this.font.getHeight() - font.ascent));
         this.text = "";
     }

@@ -41,6 +41,14 @@ public class TextureManager {
         return createTexture(image.name, image.width, image.height, image.has_alpha ? TextureFormat.getDefaultAlphaNearest(): TextureFormat.getDefaultNearest(), image.raw);
     }
 
+    public static Texture createTexture(String path) {
+        return createTexture(ResourceUtils.loadAWTImage(path));
+    }
+
+    public static Texture createTextureNearest(String path) {
+        return createTextureNearest(ResourceUtils.loadAWTImage(path));
+    }
+
     public static Texture getTexture(String name) {
         if (TextureManager.isTextureExist(name))
             return TextureManager.cached_textures.get(name);
@@ -54,10 +62,10 @@ public class TextureManager {
 
     public static void compileTexture(Texture t) {
         t.id = GL11.glGenTextures();
-        copyTextureParams(t);
+        setTextureParams(t);
     }
 
-    private static void copyTextureParams(Texture t) {
+    private static void setTextureParams(Texture t) {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, t.id);
 
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, t.textureFormat.wrapping);

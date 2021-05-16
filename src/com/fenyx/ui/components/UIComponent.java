@@ -8,8 +8,6 @@ import com.fenyx.ui.UI;
  */
 public class UIComponent extends UI {
 
-    public UIBackground background;
-
     public void onShow() {
     }
 

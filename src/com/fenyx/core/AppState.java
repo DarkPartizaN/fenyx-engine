@@ -26,7 +26,7 @@ public abstract class AppState {
     }
 
     public void sendEvent(Event event) {
-        switch (event.eventType) {
+        switch (event.type) {
             case Event.EVENT_INSTANT:
                 events.add(event);
                 break;
@@ -57,8 +57,8 @@ public abstract class AppState {
         for (Event e : delayedEvents) {
             if (EngineTimer.systemTime >= e.startTime) {
                 e.runEvent();
-                if (e.eventType == Event.EVENT_REGULAR) e.startTime = (long) (e.startTime + (e.delay * 1000));
-                if (e.eventType != Event.EVENT_REGULAR) delayedEvents.remove(e);
+                if (e.type == Event.EVENT_REGULAR) e.startTime = (long) (e.startTime + (e.delay * 1000));
+                if (e.type != Event.EVENT_REGULAR) delayedEvents.remove(e);
             }
         }
     }

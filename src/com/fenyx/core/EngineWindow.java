@@ -55,7 +55,7 @@ final class EngineWindow {
         GLFW.glfwSetMouseButtonCallback(window_handle, new MouseButtonsCallback());
 
         GLFW.glfwMakeContextCurrent(window_handle);
-        GLFW.glfwSwapInterval(1);
+        GLFW.glfwSwapInterval(0);
 
         ScreenConfig.setupScreen(width, height, fullscreen);
         UIManager.init(width, height);

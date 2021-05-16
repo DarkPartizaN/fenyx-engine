@@ -12,6 +12,7 @@ public abstract class UI {
     protected int x, y, width, height;
     protected int clip_x, clip_y, clip_w, clip_h;
     protected boolean visible, active, enabled, focused, was_focused;
+    protected boolean fullscreen, singleton;
 
     //Event system
     private long last_idle, idle_delay;
@@ -49,6 +50,9 @@ public abstract class UI {
     public abstract void onDisable();
     public abstract void onHide();
     public abstract void onDestroy();
+
+    public void init() {
+    }
 
     public final void add(UI ui) {
         if (elements.contains(ui)) return;
@@ -263,7 +267,7 @@ public abstract class UI {
         return false;
     }
 
-    public final void update() {
+    final void update() {
         if (canIdle()) onIdle();
 
         checkClipBounds();
@@ -295,5 +299,12 @@ public abstract class UI {
             else if (System.currentTimeMillis() == e.remove_start + e.remove_delay) //Remove lately hook
                 remove(e);
         });
+    }
+
+    void internalDraw() {
+    }
+
+    public final int elementsCount() {
+        return elements.size();
     }
 }
